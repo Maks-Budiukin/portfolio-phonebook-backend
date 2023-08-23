@@ -1,17 +1,13 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class ContactDto {
-  @IsOptional()
-  @IsString()
-  _id?: string;
-
+export class UpdateContactDto {
   @IsString()
   @IsNotEmpty()
+  @IsOptional()
   name: string;
 
   @IsString()
   @IsNotEmpty()
+  @IsOptional()
   number: string;
-
-  owner: string;
 }

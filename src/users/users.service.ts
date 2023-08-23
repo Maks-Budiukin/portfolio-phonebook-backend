@@ -38,7 +38,7 @@ export class UsersService {
     return user;
   }
 
-  async createUser(dto: UserDto): Promise<User> {
+  async createUser(dto: UserDto): Promise<Object> {
     const user = await this.findUser(dto.email);
 
     console.log('DTO', dto);
@@ -55,18 +55,14 @@ export class UsersService {
       password: passwordHash,
     });
 
-    console.log(newUser);
-
-    return newUser;
+    return { message: 'User created!' };
   }
 
   async loginUser(user: UserDto): Promise<User> {
-    const token = await this.jwtService.signAsync(user._id.toString());
-    const loggedUser = await this.userModel.findByIdAndUpdate(
-      user._id,
-      { token },
-      { new: true },
-    );
+    const token = this.jwtService.signAsync(user._id.toString());
+    const loggedUser = await this.userModel
+      .findByIdAndUpdate(user._id, { token }, { new: true })
+      .select('-password -updatedAt -createdAt');
 
     return loggedUser;
   }
@@ -78,7 +74,9 @@ export class UsersService {
   }
 
   async refreshfUser(user): Promise<User> {
-    const foundUser = await this.userModel.findById(user._id);
+    const foundUser = await this.userModel
+      .findById(user._id)
+      .select('-password -updatedAt -createdAt -token');
 
     return foundUser;
   }
