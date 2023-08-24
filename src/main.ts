@@ -11,7 +11,6 @@ const config = new DocumentBuilder()
   .setDescription('Swagger document for Phonebook API')
   .setVersion('1.0')
   .addBearerAuth()
-  .addServer('https://portfolio-phonebook-backend.vercel.app/')
   .build();
 
 // const options = {
