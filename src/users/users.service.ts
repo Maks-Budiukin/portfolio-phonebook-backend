@@ -1,6 +1,5 @@
 import {
   ConflictException,
-  HttpException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -41,8 +40,6 @@ export class UsersService {
   async createUser(dto: UserDto): Promise<Object> {
     const user = await this.findUser(dto.email);
 
-    console.log('DTO', dto);
-    console.log('USER', user);
     if (user) {
       throw new ConflictException('User with this email already exists!');
     }

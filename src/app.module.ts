@@ -3,8 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ContactsModule } from './contacts/contacts.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { getMongoConfig } from './configs/mongodb.config';
 
 @Module({
   imports: [
@@ -12,9 +13,11 @@ import { MongooseModule } from '@nestjs/mongoose';
     ContactsModule,
     ConfigModule.forRoot(),
     MongooseModule.forRootAsync({
-      useFactory: () => ({
-        uri: 'mongodb://localhost:27017/NestDB?retryWrites=true&w=majority',
-      }),
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: getMongoConfig,
+
+      // uri: 'mongodb+srv://maksbud:mO9sjwRUBVWxxrRB@portfolio.gyc47rc.mongodb.net/Phonebook?retryWrites=true&w=majority',
     }),
   ],
   controllers: [AppController],
