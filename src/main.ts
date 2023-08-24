@@ -14,6 +14,31 @@ const config = new DocumentBuilder()
   .addServer('https://portfolio-phonebook-backend.vercel.app/')
   .build();
 
+// const options = {
+//   definition: {
+//     openapi: '3.0.0',
+//     info: {
+//       title: 'Library API',
+//       version: '1.0.0',
+//       description: 'A simple Express Library API',
+//       termsOfService: 'http://example.com/terms/',
+//       contact: {
+//         name: 'API Support',
+//         url: 'http://www.exmaple.com/support',
+//         email: 'support@example.com',
+//       },
+//     },
+//     servers: [
+//       {
+//         url: 'https://portfolio-phonebook-backend.vercel.app/',
+//         description: 'My API Documentation',
+//       },
+//     ],
+//   },
+//   // This is to call all the file
+//   apis: ['src/**/*.js'],
+// };
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
@@ -22,7 +47,11 @@ async function bootstrap() {
   );
   //Swagger
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup(
+    'https://portfolio-phonebook-backend.vercel.app/',
+    app,
+    document,
+  );
 
   await app.listen(4000);
   if (module.hot) {
