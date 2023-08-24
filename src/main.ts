@@ -46,11 +46,7 @@ async function bootstrap() {
   );
   //Swagger
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(
-    'https://portfolio-phonebook-backend.vercel.app/api/docs',
-    app,
-    document,
-  );
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(4000);
   if (module.hot) {
