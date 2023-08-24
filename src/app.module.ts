@@ -22,8 +22,6 @@ import { join } from 'path';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: getMongoConfig,
-
-      // uri: 'mongodb+srv://maksbud:mO9sjwRUBVWxxrRB@portfolio.gyc47rc.mongodb.net/Phonebook?retryWrites=true&w=majority',
     }),
   ],
   controllers: [AppController],
