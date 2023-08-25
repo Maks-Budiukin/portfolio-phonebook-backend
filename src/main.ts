@@ -35,7 +35,7 @@ async function bootstrap() {
       'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.css',
     ],
   });
-
+  app.enableCors();
   await app.listen(4000);
   if (module.hot) {
     module.hot.accept();
