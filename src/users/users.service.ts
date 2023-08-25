@@ -33,7 +33,6 @@ export class UsersService {
     if (!validPassword) {
       throw new UnauthorizedException('Email or password is wrong!');
     }
-
     return user;
   }
 
@@ -56,7 +55,7 @@ export class UsersService {
   }
 
   async loginUser(user: UserDto): Promise<User> {
-    const token = this.jwtService.signAsync(user._id.toString());
+    const token = await this.jwtService.signAsync(user._id.toString());
     const loggedUser = await this.userModel
       .findByIdAndUpdate(user._id, { token }, { new: true })
       .select('-password -updatedAt -createdAt');
