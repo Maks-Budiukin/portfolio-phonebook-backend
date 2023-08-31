@@ -19,6 +19,14 @@ export class UpdateContactDto {
   number: string;
 
   @ApiProperty({
+    example: 'j.hetfield@aol.com',
+    description: "Contact's Email",
+  })
+  @IsOptional()
+  @IsString()
+  email?: string;
+
+  @ApiProperty({
     example: '@jhets',
     description: "Contact's Telegram",
   })

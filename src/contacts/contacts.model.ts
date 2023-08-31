@@ -25,6 +25,12 @@ export class Contact {
   number: string;
 
   @ApiResponseProperty({
+    example: 'j.hetfield@aol.com',
+  })
+  @Prop({ default: null })
+  email?: string;
+
+  @ApiResponseProperty({
     example: '@jhets',
   })
   @Prop({ default: null })
