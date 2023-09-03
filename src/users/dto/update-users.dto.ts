@@ -1,38 +1,34 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ContactDto {
-  @IsOptional()
-  @IsString()
-  _id?: string;
-
+export class UpdateUserDto {
   @ApiProperty({
     example: 'James Hetfield',
-    description: "Contact's name",
+    description: "User's name",
   })
   @IsString()
-  @IsNotEmpty()
-  name: string;
-
-  @ApiProperty({
-    example: 'j.hetfield@aol.com',
-    description: "Contact's Email",
-  })
   @IsOptional()
-  @IsString()
-  email?: string;
+  name?: string;
 
   @ApiProperty({
     example: '+1-505-555-14875',
     description: 'Phone number',
   })
   @IsString()
-  @IsNotEmpty()
-  number: string;
+  @IsOptional()
+  number?: string;
+
+  @ApiProperty({
+    example: 'j.hetfield@aol.com',
+    description: "User's Email",
+  })
+  @IsOptional()
+  @IsString()
+  email?: string;
 
   @ApiProperty({
     example: '@jhets',
-    description: "Contact's Telegram",
+    description: "User's Telegram",
   })
   @IsOptional()
   @IsString()
@@ -40,7 +36,7 @@ export class ContactDto {
 
   @ApiProperty({
     example: 'https://www.linkedin.com/in/james-hetfield',
-    description: "Contact's LinkedIn",
+    description: "User's LinkedIn",
   })
   @IsOptional()
   @IsString()
@@ -48,7 +44,7 @@ export class ContactDto {
 
   @ApiProperty({
     example: '@j.hets',
-    description: "Contact's Instagram",
+    description: "User's Instagram",
   })
   @IsOptional()
   @IsString()
@@ -56,7 +52,7 @@ export class ContactDto {
 
   @ApiProperty({
     example: 'https://github.com/James-Hetfield/',
-    description: "Contact's GitHub",
+    description: "User's GitHub",
   })
   @IsOptional()
   @IsString()
@@ -64,7 +60,7 @@ export class ContactDto {
 
   @ApiProperty({
     example: 'https://www.facebook.com/mr.hetfield/',
-    description: "Contact's Facebook",
+    description: "User's Facebook",
   })
   @IsOptional()
   @IsString()
@@ -72,7 +68,7 @@ export class ContactDto {
 
   @ApiProperty({
     example: 'https://twitter.com/therealhetfield',
-    description: "Contact's Twitter",
+    description: "User's Twitter",
   })
   @IsOptional()
   @IsString()
@@ -80,7 +76,7 @@ export class ContactDto {
 
   @ApiProperty({
     example: 'https://bitbucket.org/JHetf/',
-    description: "Contact's Bitbucket",
+    description: "User's Bitbucket",
   })
   @IsOptional()
   @IsString()
@@ -88,7 +84,7 @@ export class ContactDto {
 
   @ApiProperty({
     example: '+1-505-555-14875',
-    description: "Contact's Viber",
+    description: "User's Viber",
   })
   @IsOptional()
   @IsString()
@@ -96,11 +92,9 @@ export class ContactDto {
 
   @ApiProperty({
     example: '+1-505-555-14875',
-    description: "Contact's WhatsApp",
+    description: "User's WhatsApp",
   })
   @IsOptional()
   @IsString()
   whatsapp?: string;
-
-  owner: string;
 }

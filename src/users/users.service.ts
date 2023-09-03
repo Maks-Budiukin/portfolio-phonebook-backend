@@ -1,6 +1,8 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -9,6 +11,7 @@ import { Model } from 'mongoose';
 import { UserDto } from './dto/users.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { UpdateUserDto } from './dto/update-users.dto';
 
 @Injectable()
 export class UsersService {
@@ -67,6 +70,25 @@ export class UsersService {
     await this.userModel.findByIdAndUpdate(user._id, { token: null });
 
     return;
+  }
+
+  async updateUser(dto: UpdateUserDto, id: string, user): Promise<User> {
+    if (Object.keys(dto).length === 0) {
+      throw new BadRequestException('At least one field required!');
+    }
+
+    const userToUpdate = await this.userModel.findById(id);
+
+    if (!userToUpdate) {
+      throw new NotFoundException('No such user!');
+    }
+
+    const updatedUser = await this.userModel
+      .findByIdAndUpdate(id, dto, {
+        new: true,
+      })
+      .select('-updatedAt -createdAt');
+    return updatedUser;
   }
 
   async refreshfUser(user): Promise<User> {

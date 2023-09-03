@@ -28,6 +28,86 @@ export class UserDto {
   @IsNotEmpty()
   email: string;
 
+  @ApiPropertyOptional({
+    example: '+1-505-555-14875',
+    description: 'Phone number',
+  })
+  @IsString()
+  @IsOptional()
+  number?: string;
+
+  @ApiPropertyOptional({
+    example: '@jhets',
+    description: "Contact's Telegram",
+  })
+  @IsOptional()
+  @IsString()
+  telegram?: string;
+
+  @ApiPropertyOptional({
+    example: 'https://www.linkedin.com/in/james-hetfield',
+    description: "Contact's LinkedIn",
+  })
+  @IsOptional()
+  @IsString()
+  linkedin?: string;
+
+  @ApiPropertyOptional({
+    example: '@j.hets',
+    description: "Contact's Instagram",
+  })
+  @IsOptional()
+  @IsString()
+  instagram?: string;
+
+  @ApiPropertyOptional({
+    example: 'https://github.com/James-Hetfield/',
+    description: "Contact's GitHub",
+  })
+  @IsOptional()
+  @IsString()
+  github?: string;
+
+  @ApiPropertyOptional({
+    example: 'https://www.facebook.com/mr.hetfield/',
+    description: "Contact's Facebook",
+  })
+  @IsOptional()
+  @IsString()
+  facebook?: string;
+
+  @ApiPropertyOptional({
+    example: 'https://twitter.com/therealhetfield',
+    description: "Contact's Twitter",
+  })
+  @IsOptional()
+  @IsString()
+  twitter?: string;
+
+  @ApiPropertyOptional({
+    example: 'https://bitbucket.org/JHetf/',
+    description: "Contact's Bitbucket",
+  })
+  @IsOptional()
+  @IsString()
+  bitbucket?: string;
+
+  @ApiPropertyOptional({
+    example: '+1-505-555-14875',
+    description: "Contact's Viber",
+  })
+  @IsOptional()
+  @IsString()
+  viber?: string;
+
+  @ApiPropertyOptional({
+    example: '+1-505-555-14875',
+    description: "Contact's WhatsApp",
+  })
+  @IsOptional()
+  @IsString()
+  whatsapp?: string;
+
   @ApiProperty({
     example: 'Password1',
     description: "User's password",

@@ -6,6 +6,8 @@ import {
   Get,
   Req,
   UseGuards,
+  Param,
+  Patch,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
@@ -13,6 +15,7 @@ import { UserDto } from './dto/users.dto';
 import { Request } from 'express';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { User } from './users.model';
+import { UpdateUserDto } from './dto/update-users.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -52,6 +55,22 @@ export class UsersController {
   })
   async logout(@Req() request: Request) {
     return await this.usersService.logoutUser(request.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update user info' })
+  @ApiResponse({
+    status: 200,
+    description: "Updated user's object",
+    type: User,
+  })
+  async updateUser(
+    @Body() dto: UpdateUserDto,
+    @Param('id') id: string,
+    @Req() request: Request,
+  ) {
+    return await this.usersService.updateUser(dto, id, request.user);
   }
 
   @UseGuards(JwtAuthGuard)
