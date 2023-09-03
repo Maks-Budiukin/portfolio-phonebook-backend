@@ -87,7 +87,7 @@ export class UsersService {
       .findByIdAndUpdate(id, dto, {
         new: true,
       })
-      .select('-updatedAt -createdAt');
+      .select('-updatedAt -createdAt -password -token');
     return updatedUser;
   }
 
@@ -97,5 +97,13 @@ export class UsersService {
       .select('-password -updatedAt -createdAt -token');
 
     return foundUser;
+  }
+
+  async shareContact(user): Promise<User> {
+    const sharedUser = await this.userModel
+      .findById(user._id)
+      .select('-password -updatedAt -createdAt -token -_id');
+
+    return sharedUser;
   }
 }
