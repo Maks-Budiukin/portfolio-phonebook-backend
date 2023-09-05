@@ -119,4 +119,7 @@ export class UserDto {
 
   @IsOptional()
   token?: string;
+
+  @IsOptional()
+  shareLink?: string;
 }

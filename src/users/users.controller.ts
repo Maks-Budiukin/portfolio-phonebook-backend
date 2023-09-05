@@ -91,8 +91,12 @@ export class UsersController {
     description: 'User object to share',
     type: User,
   })
-  @Get('share/:id')
-  async share(@Param('id') id: string, @Req() request: Request) {
-    return await this.usersService.shareContact(id);
+  @Get('share/:shareLink/:id')
+  async share(
+    @Param('id') id: string,
+    @Req() request: Request,
+    @Param('shareLink') shareLink: string,
+  ) {
+    return await this.usersService.shareContact(id, shareLink);
   }
 }

@@ -92,6 +92,12 @@ export class User {
   })
   @Prop({ default: null })
   token: string;
+
+  @ApiResponseProperty({
+    example: 'ggsgs3t45sdf2-etfgs3-vvbzzz',
+  })
+  @Prop({ default: null })
+  shareLink: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

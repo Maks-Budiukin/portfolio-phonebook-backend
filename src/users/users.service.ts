@@ -10,6 +10,7 @@ import { User, UserDocument } from './users.model';
 import { Model } from 'mongoose';
 import { UserDto } from './dto/users.dto';
 import * as bcrypt from 'bcrypt';
+import { v4 } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from './dto/update-users.dto';
 
@@ -48,10 +49,12 @@ export class UsersService {
 
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(dto.password, salt);
+    const shareLink = v4();
 
     const newUser = await this.userModel.create({
       ...dto,
       password: passwordHash,
+      shareLink,
     });
 
     return { message: 'User created!' };
@@ -99,11 +102,13 @@ export class UsersService {
     return foundUser;
   }
 
-  async shareContact(id: string): Promise<User> {
+  async shareContact(id: string, shareLink: string): Promise<User> {
     const sharedUser = await this.userModel
       .findById(id)
       .select('-password -updatedAt -createdAt -token -_id');
-
+    if (!sharedUser || sharedUser.shareLink !== shareLink) {
+      throw new NotFoundException('No user to add!');
+    }
     return sharedUser;
   }
 }
