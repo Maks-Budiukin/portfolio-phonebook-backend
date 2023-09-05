@@ -85,15 +85,14 @@ export class UsersController {
     return await this.usersService.refreshfUser(request.user);
   }
 
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Share user' })
   @ApiResponse({
     status: 200,
     description: 'User object to share',
     type: User,
   })
-  @Get('share')
-  async share(@Req() request: Request) {
-    return await this.usersService.refreshfUser(request.user);
+  @Get('share/:id')
+  async share(@Param('id') id: string, @Req() request: Request) {
+    return await this.usersService.shareContact(id);
   }
 }

@@ -99,9 +99,9 @@ export class UsersService {
     return foundUser;
   }
 
-  async shareContact(user): Promise<User> {
+  async shareContact(id: string): Promise<User> {
     const sharedUser = await this.userModel
-      .findById(user._id)
+      .findById(id)
       .select('-password -updatedAt -createdAt -token -_id');
 
     return sharedUser;
