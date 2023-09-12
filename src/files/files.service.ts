@@ -26,32 +26,17 @@ export class FilesService {
     return res;
   }
 
-  async convertToWebp(file: Buffer): Promise<Buffer> {
+  async convertToWebpX200(file: Buffer): Promise<Buffer> {
     return sharp(file)
       .resize(200, 200, { withoutEnlargement: true })
       .webp()
       .toBuffer();
   }
 
-  async resizeAvatar(file: Buffer): Promise<Buffer[]> {
-    const resizedArray = [];
-
-    const x200 = sharp(file)
-      .resize(200, 200, {
-        withoutEnlargement: true,
-      })
+  async convertToWebpX100(file: Buffer): Promise<Buffer> {
+    return sharp(file)
+      .resize(100, 100, { withoutEnlargement: true })
+      .webp()
       .toBuffer();
-
-    resizedArray.push(x200);
-
-    const x100 = sharp(file)
-      .resize(100, 100, {
-        withoutEnlargement: true,
-      })
-      .toBuffer();
-
-    resizedArray.push(x100);
-
-    return resizedArray;
   }
 }

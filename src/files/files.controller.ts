@@ -25,28 +25,23 @@ export class FilesController {
     @UploadedFile() file: Express.Multer.File,
     @Req() request: Request,
   ): Promise<FileResponse[]> {
-    const saveArray: MFile[] = [new MFile(file)];
+    const saveArray: MFile[] = [];
 
     if (file.mimetype.includes('image')) {
-      const webP = await this.filesService.convertToWebp(file.buffer);
+      const webPX200 = await this.filesService.convertToWebpX200(file.buffer);
       saveArray.push(
         new MFile({
-          originalname: `${file.originalname.split('.')[0]}.webp`,
-          buffer: webP,
+          originalname: `${file.originalname.split('.')[0]}X200.webp`,
+          buffer: webPX200,
         }),
       );
 
-      const resizedAvatars = await this.filesService.resizeAvatar(webP);
-
+      const webPX100 = await this.filesService.convertToWebpX100(file.buffer);
       saveArray.push(
-        {
-          originalname: `${file.originalname.split('.')[0]}}X200.webp`,
-          buffer: resizedAvatars[0],
-        },
-        {
-          originalname: `${file.originalname.split('.')[0]}}X100.webp`,
-          buffer: resizedAvatars[1],
-        },
+        new MFile({
+          originalname: `${file.originalname.split('.')[0]}X100.webp`,
+          buffer: webPX100,
+        }),
       );
     }
     return this.filesService.saveAvatar(saveArray, request.user);
