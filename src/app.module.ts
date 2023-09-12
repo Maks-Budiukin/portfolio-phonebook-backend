@@ -6,6 +6,7 @@ import { ContactsModule } from './contacts/contacts.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { getMongoConfig } from './configs/mongodb.config';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { getMongoConfig } from './configs/mongodb.config';
       inject: [ConfigService],
       useFactory: getMongoConfig,
     }),
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
