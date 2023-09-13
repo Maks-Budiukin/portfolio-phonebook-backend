@@ -5,6 +5,11 @@ import { ApiResponseProperty } from '@nestjs/swagger';
 
 export type ContactDocument = HydratedDocument<Contact>;
 
+export class Avatar {
+  X200: string;
+  X500: string;
+}
+
 @Schema({ versionKey: false, timestamps: true })
 export class Contact {
   @ApiResponseProperty({
@@ -83,6 +88,13 @@ export class Contact {
   })
   @Prop({ default: null })
   whatsapp?: string;
+
+  @ApiResponseProperty({
+    example:
+      '{ X500: avatars/25235252523fsfs5wf/ava0X500.webp, X200: avatars/25235252523fsfs5wf/ava0X200.webp }',
+  })
+  @Prop({ default: null })
+  avatar?: Avatar;
 
   @ApiResponseProperty({
     example: '64e7b40704f6b0d4d0440b26',

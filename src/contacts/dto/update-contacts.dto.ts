@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Avatar } from '../contacts.model';
 
 export class UpdateContactDto {
   @ApiProperty({
@@ -97,4 +98,12 @@ export class UpdateContactDto {
   @IsOptional()
   @IsString()
   whatsapp?: string;
+
+  @ApiProperty({
+    example:
+      '{ X500: avatars/25235252523fsfs5wf/ava0X500.webp, X200: avatars/25235252523fsfs5wf/ava0X200.webp }',
+    description: "Contact's Avatar",
+  })
+  @IsOptional()
+  avatar?: Avatar;
 }

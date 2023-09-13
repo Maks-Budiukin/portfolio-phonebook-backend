@@ -13,12 +13,15 @@ import * as bcrypt from 'bcrypt';
 import { v4 } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from './dto/update-users.dto';
+import { FilesService } from 'src/files/files.service';
+import { MFile } from 'src/files/mfile.class';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly jwtService: JwtService,
+    private readonly filesService: FilesService,
   ) {}
 
   async findUser(email: string): Promise<User> {
@@ -75,8 +78,13 @@ export class UsersService {
     return;
   }
 
-  async updateUser(dto: UpdateUserDto, id: string, user): Promise<User> {
-    if (Object.keys(dto).length === 0) {
+  async updateUser(
+    dto: UpdateUserDto,
+    id: string,
+    user,
+    file: MFile,
+  ): Promise<User> {
+    if (Object.keys(dto).length === 0 && !file) {
       throw new BadRequestException('At least one field required!');
     }
 
@@ -84,6 +92,15 @@ export class UsersService {
 
     if (!userToUpdate) {
       throw new NotFoundException('No such user!');
+    }
+
+    if (file) {
+      const avatar = await this.filesService.changeContactAvatar(
+        file,
+        user,
+        userToUpdate._id,
+      );
+      await this.userModel.findByIdAndUpdate(id, { avatar });
     }
 
     const updatedUser = await this.userModel

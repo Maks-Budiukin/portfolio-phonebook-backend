@@ -7,7 +7,9 @@ import {
   Patch,
   Post,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ContactsService } from './contacts.service';
 import { Request } from 'express';
@@ -21,6 +23,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Contact } from './contacts.model';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Contacts')
 @UseGuards(JwtAuthGuard)
@@ -29,7 +32,6 @@ import { Contact } from './contacts.model';
 export class ContactsController {
   constructor(private readonly contactsService: ContactsService) {}
 
-  // @UseGuards(JwtAuthGuard)
   @Get('')
   @ApiOperation({ summary: 'Get contacts' })
   @ApiResponse({
@@ -42,7 +44,6 @@ export class ContactsController {
     return await this.contactsService.getContacts(request.user);
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Post('')
   @ApiOperation({ summary: 'Create contact' })
   @ApiResponse({
@@ -50,11 +51,20 @@ export class ContactsController {
     description: "Created contact's object",
     type: Contact,
   })
-  async createContact(@Body() dto: ContactDto, @Req() request: Request) {
-    return await this.contactsService.addContact(dto, request.user);
+  @UseInterceptors(FileInterceptor('files'))
+  async createContact(
+    @Body() dto: ContactDto,
+    @Req() request: Request,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const newUser = await this.contactsService.addContact(
+      dto,
+      request.user,
+      file,
+    );
+    return newUser;
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiOperation({ summary: 'Update contact info' })
   @ApiResponse({
@@ -62,15 +72,21 @@ export class ContactsController {
     description: "Updated contact's object",
     type: Contact,
   })
+  @UseInterceptors(FileInterceptor('files'))
   async updateContact(
     @Body() dto: UpdateContactDto,
     @Param('id') id: string,
     @Req() request: Request,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    return await this.contactsService.updateContact(dto, id, request.user);
+    return await this.contactsService.updateContact(
+      dto,
+      id,
+      request.user,
+      file,
+    );
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @ApiOperation({ summary: 'Delete contact' })
   @ApiResponse({

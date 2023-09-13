@@ -8,6 +8,8 @@ import {
   UseGuards,
   Param,
   Patch,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
@@ -16,6 +18,7 @@ import { Request } from 'express';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { User } from './users.model';
 import { UpdateUserDto } from './dto/update-users.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Users')
 @Controller('users')
@@ -65,12 +68,14 @@ export class UsersController {
     description: "Updated user's object",
     type: User,
   })
+  @UseInterceptors(FileInterceptor('files'))
   async updateUser(
     @Body() dto: UpdateUserDto,
     @Param('id') id: string,
     @Req() request: Request,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    return await this.usersService.updateUser(dto, id, request.user);
+    return await this.usersService.updateUser(dto, id, request.user, file);
   }
 
   @UseGuards(JwtAuthGuard)

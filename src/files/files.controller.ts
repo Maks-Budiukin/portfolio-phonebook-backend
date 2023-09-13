@@ -28,22 +28,7 @@ export class FilesController {
     const saveArray: MFile[] = [];
 
     if (file.mimetype.includes('image')) {
-      const webPX200 = await this.filesService.convertToWebpX200(file.buffer);
-      saveArray.push(
-        new MFile({
-          originalname: `${file.originalname.split('.')[0]}X200.webp`,
-          buffer: webPX200,
-        }),
-      );
-
-      const webPX100 = await this.filesService.convertToWebpX100(file.buffer);
-      saveArray.push(
-        new MFile({
-          originalname: `${file.originalname.split('.')[0]}X100.webp`,
-          buffer: webPX100,
-        }),
-      );
     }
-    return this.filesService.saveAvatar(saveArray, request.user);
+    return;
   }
 }

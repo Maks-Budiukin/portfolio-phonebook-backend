@@ -9,12 +9,15 @@ import { Contact, ContactDocument } from './contacts.model';
 import { Model } from 'mongoose';
 import { ContactDto } from './dto/contacts.dto';
 import { UpdateContactDto } from './dto/update-contacts.dto';
+import { FilesService } from 'src/files/files.service';
+import { MFile } from 'src/files/mfile.class';
 
 @Injectable()
 export class ContactsService {
   constructor(
     @InjectModel(Contact.name)
     private readonly contactModel: Model<ContactDocument>,
+    private readonly filesService: FilesService,
   ) {}
 
   async getContacts(user): Promise<Contact[]> {
@@ -24,7 +27,7 @@ export class ContactsService {
     return contacts;
   }
 
-  async addContact(dto: ContactDto, user): Promise<Contact> {
+  async addContact(dto: ContactDto, user, file: MFile): Promise<Contact> {
     const existingNumber = await this.contactModel.findOne({
       number: dto.number,
       owner: user._id,
@@ -34,10 +37,20 @@ export class ContactsService {
         'You already have this number! Try to edit it!',
       );
     }
+
     const newContact = await this.contactModel.create({
       ...dto,
       owner: user._id,
     });
+
+    if (file) {
+      const avatar = await this.filesService.changeContactAvatar(
+        file,
+        user,
+        newContact._id,
+      );
+      await this.contactModel.findByIdAndUpdate(newContact._id, { avatar });
+    }
 
     const contact = await this.contactModel
       .findById(newContact._id)
@@ -49,8 +62,9 @@ export class ContactsService {
     dto: UpdateContactDto,
     id: string,
     user,
+    file: MFile,
   ): Promise<Contact> {
-    if (Object.keys(dto).length === 0) {
+    if (Object.keys(dto).length === 0 && !file) {
       throw new BadRequestException('At least one field required!');
     }
 
@@ -63,11 +77,21 @@ export class ContactsService {
       throw new NotFoundException('No such contact!');
     }
 
+    if (file) {
+      const avatar = await this.filesService.changeContactAvatar(
+        file,
+        user,
+        id,
+      );
+      await this.contactModel.findByIdAndUpdate(id, { avatar });
+    }
+
     const updatedContact = await this.contactModel
       .findByIdAndUpdate(id, dto, {
         new: true,
       })
       .select('-updatedAt -createdAt');
+
     return updatedContact;
   }
 

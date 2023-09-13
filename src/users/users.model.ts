@@ -1,6 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { ApiResponseProperty } from '@nestjs/swagger';
+// import { Avatar } from 'src/contacts/contacts.model';
+
+class Avatar {
+  X200: string;
+  X500: string;
+}
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -82,6 +88,13 @@ export class User {
   })
   @Prop({ default: null })
   whatsapp?: string;
+
+  @ApiResponseProperty({
+    example:
+      '{ X500: avatars/25235252523fsfs5wf/ava0X500.webp, X200: avatars/25235252523fsfs5wf/ava0X200.webp }',
+  })
+  @Prop({ default: null })
+  avatar?: Avatar;
 
   @Prop()
   password: string;
