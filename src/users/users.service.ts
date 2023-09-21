@@ -2,20 +2,20 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './users.model';
 import { Model } from 'mongoose';
-import { UserDto } from './dto/users.dto';
 import * as bcrypt from 'bcrypt';
 import { v4 } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from './dto/update-users.dto';
-import { FilesService } from 'src/files/files.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { UserResponseDto } from './dto/users.response.dto';
+import { UserCreateDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -30,7 +30,7 @@ export class UsersService {
     return user;
   }
 
-  async validateUser(dto: UserDto): Promise<User> {
+  async validateUser(dto: UserCreateDto): Promise<User> {
     const user = await this.findUser(dto.email);
 
     if (!user) {
@@ -44,7 +44,7 @@ export class UsersService {
     return user;
   }
 
-  async createUser(dto: UserDto): Promise<Object> {
+  async createUser(dto: UserCreateDto): Promise<void> {
     const user = await this.findUser(dto.email);
 
     if (user) {
@@ -61,10 +61,15 @@ export class UsersService {
       shareLink,
     });
 
-    return { message: 'User created!' };
+    if (!newUser) {
+      throw new InternalServerErrorException(
+        'Something went wrong. Please, try again!',
+      );
+    }
+    return;
   }
 
-  async loginUser(user: UserDto): Promise<User> {
+  async loginUser(user: User): Promise<UserResponseDto> {
     const token = await this.jwtService.signAsync(user._id.toString());
     const loggedUser = await this.userModel
       .findByIdAndUpdate(user._id, { token }, { new: true })
@@ -73,18 +78,23 @@ export class UsersService {
     return loggedUser;
   }
 
-  async logoutUser(user: UserResponseDto) {
-    await this.userModel.findByIdAndUpdate(user._id, { token: null });
-
+  async logoutUser(user: UserResponseDto): Promise<void> {
+    const loggedOutUser = await this.userModel.findByIdAndUpdate(user._id, {
+      token: null,
+    });
+    if (!loggedOutUser) {
+      throw new InternalServerErrorException(
+        'Something went wrong. Please, try again!',
+      );
+    }
     return;
   }
 
   async updateUser(
     dto: UpdateUserDto,
     id: string,
-    user: UserResponseDto,
     file: Express.Multer.File,
-  ): Promise<User> {
+  ): Promise<UserResponseDto> {
     if (Object.keys(dto).length === 0 && !file) {
       throw new BadRequestException('At least one field required!');
     }
@@ -101,7 +111,7 @@ export class UsersService {
         userToUpdate,
         userToUpdate._id.toString(),
       );
-      await this.userModel.findByIdAndUpdate(id, { avatar: avatar.url });
+      dto.avatar = avatar.url;
     }
 
     const updatedUser = await this.userModel
@@ -112,7 +122,7 @@ export class UsersService {
     return updatedUser;
   }
 
-  async refreshfUser(user: UserResponseDto): Promise<User> {
+  async refreshfUser(user: UserResponseDto): Promise<UserResponseDto> {
     const foundUser = await this.userModel
       .findById(user._id)
       .select('-password -updatedAt -createdAt -token');
@@ -120,7 +130,7 @@ export class UsersService {
     return foundUser;
   }
 
-  async shareContact(id: string, shareLink: string): Promise<User> {
+  async shareContact(id: string, shareLink: string): Promise<UserResponseDto> {
     const sharedUser = await this.userModel
       .findById(id)
       .select('-password -updatedAt -createdAt -token -_id');

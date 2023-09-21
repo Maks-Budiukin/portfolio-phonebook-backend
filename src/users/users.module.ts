@@ -7,7 +7,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JWTStrategy } from './strategies/jwt.strategy';
-import { FilesModule } from 'src/files/files.module';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 
 @Module({
@@ -31,7 +30,6 @@ import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
       },
     }),
     PassportModule,
-    FilesModule,
     CloudinaryModule,
   ],
   controllers: [UsersController],

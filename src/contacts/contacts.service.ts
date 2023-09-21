@@ -7,38 +7,40 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Contact, ContactDocument } from './contacts.model';
 import { Model } from 'mongoose';
-import { ContactDto } from './dto/contacts.dto';
-import { UpdateContactDto } from './dto/update-contacts.dto';
-import { FilesService } from 'src/files/files.service';
-import { MFile } from 'src/files/mfile.class';
+
+import { ContactUpdateDto } from './dto/update-contacts.dto';
 import { UserResponseDto } from 'src/users/dto/users.response.dto';
-import { User } from 'src/users/users.model';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { ContactResponsetDto } from './dto/contact.response.dto';
+import { ContactCreateDto } from './dto/create-contact.dto';
 
 @Injectable()
 export class ContactsService {
   constructor(
     @InjectModel(Contact.name)
     private readonly contactModel: Model<ContactDocument>,
-    private readonly filesService: FilesService,
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  async getContacts(user): Promise<Contact[]> {
+  async getContacts(user: UserResponseDto): Promise<ContactResponsetDto[]> {
     const contacts = await this.contactModel
       .find({ owner: user._id })
       .select('-updatedAt -createdAt');
     return contacts;
   }
 
-  async addContact(dto: ContactDto, user, file: MFile): Promise<Contact> {
+  async addContact(
+    dto: ContactCreateDto,
+    user: UserResponseDto,
+    file: Express.Multer.File,
+  ): Promise<ContactResponsetDto> {
     const existingNumber = await this.contactModel.findOne({
-      number: dto.number,
+      number: dto.email,
       owner: user._id,
     });
     if (existingNumber) {
       throw new ConflictException(
-        'You already have this number! Try to edit it!',
+        'You already have this contact! Try to edit it!',
       );
     }
 
@@ -48,12 +50,14 @@ export class ContactsService {
     });
 
     if (file) {
-      const avatar = await this.filesService.changeContactAvatar(
+      const avatar = await this.cloudinaryService.uploadImage(
         file,
         user,
-        newContact._id,
+        newContact._id.toString(),
       );
-      await this.contactModel.findByIdAndUpdate(newContact._id, { avatar });
+      await this.contactModel.findByIdAndUpdate(newContact._id, {
+        avatar: avatar.url,
+      });
     }
 
     const contact = await this.contactModel
@@ -63,11 +67,11 @@ export class ContactsService {
   }
 
   async updateContact(
-    dto: UpdateContactDto,
+    dto: ContactUpdateDto,
     id: string,
-    user: User,
+    user: UserResponseDto,
     file: Express.Multer.File,
-  ): Promise<Contact> {
+  ): Promise<ContactResponsetDto> {
     if (Object.keys(dto).length === 0 && !file) {
       throw new BadRequestException('At least one field required!');
     }
@@ -81,22 +85,13 @@ export class ContactsService {
       throw new NotFoundException('No such contact!');
     }
 
-    // if (file) {
-    //   const avatar = await this.filesService.changeContactAvatar(
-    //     file,
-    //     user,
-    //     id,
-    //   );
-    //   await this.contactModel.findByIdAndUpdate(id, { avatar });
-    // }
-
     if (file) {
       const avatar = await this.cloudinaryService.uploadImage(
         file,
         user,
-        contactToUpdate._id,
+        contactToUpdate._id.toString(),
       );
-      await this.contactModel.findByIdAndUpdate(id, { avatar: avatar.url });
+      dto.avatar = avatar.url;
     }
 
     const updatedContact = await this.contactModel
@@ -108,7 +103,10 @@ export class ContactsService {
     return updatedContact;
   }
 
-  async deleteContact(id: string, user): Promise<Contact> {
+  async deleteContact(
+    id: string,
+    user: UserResponseDto,
+  ): Promise<ContactResponsetDto> {
     const contactToDelete = await this.contactModel.findById(id);
     if (user._id.toString() !== contactToDelete.owner.toString()) {
       throw new NotFoundException('No such contact!');

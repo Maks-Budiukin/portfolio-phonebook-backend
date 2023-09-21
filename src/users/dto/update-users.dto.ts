@@ -1,8 +1,8 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateUserDto {
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'James Hetfield',
     description: "User's name",
   })
@@ -10,7 +10,7 @@ export class UpdateUserDto {
   @IsOptional()
   name?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '+1-505-555-14875',
     description: 'Phone number',
   })
@@ -18,7 +18,7 @@ export class UpdateUserDto {
   @IsOptional()
   number?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'j.hetfield@aol.com',
     description: "User's Email",
   })
@@ -26,7 +26,7 @@ export class UpdateUserDto {
   @IsString()
   email?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '@jhets',
     description: "User's Telegram",
   })
@@ -34,7 +34,7 @@ export class UpdateUserDto {
   @IsString()
   telegram?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'https://www.linkedin.com/in/james-hetfield',
     description: "User's LinkedIn",
   })
@@ -42,7 +42,7 @@ export class UpdateUserDto {
   @IsString()
   linkedin?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '@j.hets',
     description: "User's Instagram",
   })
@@ -50,7 +50,7 @@ export class UpdateUserDto {
   @IsString()
   instagram?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'https://github.com/James-Hetfield/',
     description: "User's GitHub",
   })
@@ -58,7 +58,7 @@ export class UpdateUserDto {
   @IsString()
   github?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'https://www.facebook.com/mr.hetfield/',
     description: "User's Facebook",
   })
@@ -66,7 +66,7 @@ export class UpdateUserDto {
   @IsString()
   facebook?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'https://twitter.com/therealhetfield',
     description: "User's Twitter",
   })
@@ -74,7 +74,7 @@ export class UpdateUserDto {
   @IsString()
   twitter?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'https://bitbucket.org/JHetf/',
     description: "User's Bitbucket",
   })
@@ -82,7 +82,7 @@ export class UpdateUserDto {
   @IsString()
   bitbucket?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '+1-505-555-14875',
     description: "User's Viber",
   })
@@ -90,7 +90,7 @@ export class UpdateUserDto {
   @IsString()
   viber?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '+1-505-555-14875',
     description: "User's WhatsApp",
   })
@@ -98,9 +98,9 @@ export class UpdateUserDto {
   @IsString()
   whatsapp?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example:
-      '{ X500: avatars/25235252523fsfs5wf/ava0X500.webp, X200: avatars/25235252523fsfs5wf/ava0X200.webp }',
+      'http://res.cloudinary.com/dngqobweq/image/upload/v1695303762/pb_avatars/650c2e487884278b0c149758/650c2e48788g2y23fsfdh3s758.jpg',
     description: "User's Avatar",
   })
   @IsOptional()

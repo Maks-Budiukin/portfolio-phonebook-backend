@@ -1,54 +1,50 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, ObjectId } from 'mongoose';
-import { ApiResponseProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
-// import { Avatar } from 'src/contacts/contacts.model';
 
 export type UserDocument = HydratedDocument<User>;
 
 @Schema({ versionKey: false, timestamps: true })
 export class User {
-  // @Prop()
-  // _id?: ObjectId;
+  _id?: ObjectId;
 
   @Prop()
-  name?: string;
+  name: string;
 
   @Prop({ unique: true })
   email: string;
 
   @Prop({ default: null })
-  number?: string;
+  number: string;
 
   @Prop({ default: null })
-  telegram?: string;
+  telegram: string;
 
   @Prop({ default: null })
-  linkedin?: string;
+  linkedin: string;
 
   @Prop({ default: null })
-  instagram?: string;
+  instagram: string;
 
   @Prop({ default: null })
-  github?: string;
+  github: string;
 
   @Prop({ default: null })
-  facebook?: string;
+  facebook: string;
 
   @Prop({ default: null })
-  twitter?: string;
+  twitter: string;
 
   @Prop({ default: null })
-  bitbucket?: string;
+  bitbucket: string;
 
   @Prop({ default: null })
-  viber?: string;
+  viber: string;
 
   @Prop({ default: null })
-  whatsapp?: string;
+  whatsapp: string;
 
   @Prop({ default: null })
-  avatar?: string;
+  avatar: string;
 
   @Prop()
   password: string;

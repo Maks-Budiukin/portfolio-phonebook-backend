@@ -6,16 +6,13 @@ import {
   Param,
   Patch,
   Post,
-  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ContactsService } from './contacts.service';
-import { Request } from 'express';
 import { JwtAuthGuard } from 'src/users/guards/jwt.guard';
-import { ContactDto } from './dto/contacts.dto';
-import { UpdateContactDto } from './dto/update-contacts.dto';
+import { ContactUpdateDto } from './dto/update-contacts.dto';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -25,13 +22,14 @@ import {
 import { Contact } from './contacts.model';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserResponseDto } from 'src/users/dto/users.response.dto';
-import { GetUser } from 'src/users/getuser.decorator';
-import { User } from 'src/users/users.model';
+import { GetUser } from 'src/decorators/getuser.decorator';
+import { ContactResponsetDto } from './dto/contact.response.dto';
+import { ContactCreateDto } from './dto/create-contact.dto';
 
 @ApiTags('Contacts')
 @UseGuards(JwtAuthGuard)
-@Controller('contacts')
 @ApiBearerAuth()
+@Controller('contacts')
 export class ContactsController {
   constructor(private readonly contactsService: ContactsService) {}
 
@@ -40,11 +38,13 @@ export class ContactsController {
   @ApiResponse({
     status: 200,
     description: 'List of contacts',
-    type: Contact,
+    type: [ContactResponsetDto],
     isArray: true,
   })
-  async getAllContacts(@Req() request: Request) {
-    return await this.contactsService.getContacts(request.user);
+  async getAllContacts(
+    @GetUser() user: UserResponseDto,
+  ): Promise<ContactResponsetDto[]> {
+    return await this.contactsService.getContacts(user);
   }
 
   @Post('')
@@ -52,19 +52,15 @@ export class ContactsController {
   @ApiResponse({
     status: 201,
     description: "Created contact's object",
-    type: Contact,
+    type: ContactResponsetDto,
   })
   @UseInterceptors(FileInterceptor('files'))
   async createContact(
-    @Body() dto: ContactDto,
-    @Req() request: Request,
+    @Body() dto: ContactCreateDto,
+    @GetUser() user: UserResponseDto,
     @UploadedFile() file: Express.Multer.File,
-  ) {
-    const newUser = await this.contactsService.addContact(
-      dto,
-      request.user,
-      file,
-    );
+  ): Promise<ContactResponsetDto> {
+    const newUser = await this.contactsService.addContact(dto, user, file);
     return newUser;
   }
 
@@ -73,17 +69,15 @@ export class ContactsController {
   @ApiResponse({
     status: 200,
     description: "Updated contact's object",
-    type: Contact,
+    type: ContactResponsetDto,
   })
   @UseInterceptors(FileInterceptor('files'))
   async updateContact(
-    @Body() dto: UpdateContactDto,
+    @Body() dto: ContactUpdateDto,
     @Param('id') id: string,
-    @Req() request: Request,
-    @GetUser() user: User,
+    @GetUser() user: UserResponseDto,
     @UploadedFile() file: Express.Multer.File,
-  ) {
-    // const user = request.user as UserResponseDto;
+  ): Promise<ContactResponsetDto> {
     return await this.contactsService.updateContact(dto, id, user, file);
   }
 
@@ -94,7 +88,10 @@ export class ContactsController {
     description: "Deleted contact's object",
     type: Contact,
   })
-  async deleteContact(@Param('id') id: string, @Req() request: Request) {
-    return await this.contactsService.deleteContact(id, request.user);
+  async deleteContact(
+    @Param('id') id: string,
+    @GetUser() user: UserResponseDto,
+  ): Promise<ContactResponsetDto> {
+    return await this.contactsService.deleteContact(id, user);
   }
 }

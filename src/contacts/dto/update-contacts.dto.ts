@@ -1,107 +1,107 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class UpdateContactDto {
-  @ApiProperty({
+export class ContactUpdateDto {
+  @ApiPropertyOptional({
     example: 'James Hetfield',
     description: "Contact's name",
   })
   @IsString()
   @IsOptional()
-  name: string;
+  name?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '+1-505-555-14875',
-    description: 'Phone number',
+    description: "Contact's number",
   })
   @IsString()
   @IsOptional()
-  number: string;
+  number?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'j.hetfield@aol.com',
-    description: "Contact's Email",
+    description: "Contact's email",
   })
+  @IsEmail()
   @IsOptional()
-  @IsString()
   email?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '@jhets',
     description: "Contact's Telegram",
   })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   telegram?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'https://www.linkedin.com/in/james-hetfield',
     description: "Contact's LinkedIn",
   })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   linkedin?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '@j.hets',
     description: "Contact's Instagram",
   })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   instagram?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'https://github.com/James-Hetfield/',
     description: "Contact's GitHub",
   })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   github?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'https://www.facebook.com/mr.hetfield/',
     description: "Contact's Facebook",
   })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   facebook?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'https://twitter.com/therealhetfield',
     description: "Contact's Twitter",
   })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   twitter?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'https://bitbucket.org/JHetf/',
-    description: "Contact's Bitbucket",
+    description: "Contact's BitBucket",
   })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   bitbucket?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '+1-505-555-14875',
     description: "Contact's Viber",
   })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   viber?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '+1-505-555-14875',
     description: "Contact's WhatsApp",
   })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   whatsapp?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example:
-      '{ X500: avatars/25235252523fsfs5wf/ava0X500.webp, X200: avatars/25235252523fsfs5wf/ava0X200.webp }',
-    description: "Contact's Avatar",
+      'http://res.cloudinary.com/dngqobweq/image/upload/v1695303762/pb_avatars/650c2e487884278b0c149758/650c2e48788g2y23fsfdh3s758.jpg',
+    description: "User's Avatar",
   })
   @IsOptional()
   avatar?: string;
