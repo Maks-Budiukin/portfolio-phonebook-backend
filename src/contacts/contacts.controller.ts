@@ -24,6 +24,9 @@ import {
 } from '@nestjs/swagger';
 import { Contact } from './contacts.model';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UserResponseDto } from 'src/users/dto/users.response.dto';
+import { GetUser } from 'src/users/getuser.decorator';
+import { User } from 'src/users/users.model';
 
 @ApiTags('Contacts')
 @UseGuards(JwtAuthGuard)
@@ -77,14 +80,11 @@ export class ContactsController {
     @Body() dto: UpdateContactDto,
     @Param('id') id: string,
     @Req() request: Request,
+    @GetUser() user: User,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return await this.contactsService.updateContact(
-      dto,
-      id,
-      request.user,
-      file,
-    );
+    // const user = request.user as UserResponseDto;
+    return await this.contactsService.updateContact(dto, id, user, file);
   }
 
   @Delete(':id')

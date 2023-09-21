@@ -1,11 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-// import { Avatar } from 'src/contacts/contacts.model';
-
-class Avatar {
-  X200: string;
-  X500: string;
-}
 
 export class UpdateUserDto {
   @ApiProperty({
@@ -110,5 +104,5 @@ export class UpdateUserDto {
     description: "User's Avatar",
   })
   @IsOptional()
-  avatar?: Avatar;
+  avatar?: string;
 }

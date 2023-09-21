@@ -7,25 +7,6 @@ import { MFile } from './mfile.class';
 
 @Injectable()
 export class FilesService {
-  // async saveAvatar(files: MFile[], user): Promise<FileResponse[]> {
-  //   const userFolder = user._id;
-  //   const uploadFolred = `${path}/avatars/${userFolder}`;
-
-  //   ensureDir(uploadFolred);
-
-  //   const res: FileResponse[] = [];
-
-  //   for (let file of files) {
-  //     await writeFile(`${uploadFolred}/${file.originalname}`, file.buffer);
-  //     res.push({
-  //       url: `avatars/${userFolder}/${file.originalname}`,
-  //       name: `${file.originalname}`,
-  //     });
-  //   }
-
-  //   return res;
-  // }
-
   async convertToWebpX500(file: Buffer) {
     return sharp(file)
       .resize(500, 500, { withoutEnlargement: true })

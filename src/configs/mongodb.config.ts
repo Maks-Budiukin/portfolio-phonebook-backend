@@ -1,10 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import {
-  MongooseModuleAsyncOptions,
-  MongooseModuleFactoryOptions,
-  MongooseModuleOptions,
-} from '@nestjs/mongoose';
-import { ConnectOptions } from 'mongoose';
+import { MongooseModuleFactoryOptions } from '@nestjs/mongoose';
 
 export const getMongoConfig = async (
   configService: ConfigService,
@@ -15,17 +10,17 @@ export const getMongoConfig = async (
 };
 
 const getMongoString = (configService: ConfigService): string => {
-  // return 'mongodb://localhost:27017/Test243';
-  return (
-    'mongodb+srv://' +
-    configService.get('MONGO_LOGIN') +
-    ':' +
-    configService.get('MONGO_PASSWORD') +
-    '@' +
-    configService.get('MONGO_HOST') +
-    '/' +
-    configService.get('MONGO_DATABASE') +
-    '?' +
-    configService.get('MONGO_OPTIONS')
-  );
+  return 'mongodb://localhost:27017/Phonebook';
+  // return (
+  //   'mongodb+srv://' +
+  //   configService.get('MONGO_LOGIN') +
+  //   ':' +
+  //   configService.get('MONGO_PASSWORD') +
+  //   '@' +
+  //   configService.get('MONGO_HOST') +
+  //   '/' +
+  //   configService.get('MONGO_DATABASE') +
+  //   '?' +
+  //   configService.get('MONGO_OPTIONS')
+  // );
 };

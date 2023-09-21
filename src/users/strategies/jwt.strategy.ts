@@ -5,6 +5,7 @@ import { User, UserDocument } from '../users.model';
 import { Model } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UserResponseDto } from '../dto/users.response.dto';
 
 @Injectable()
 export class JWTStrategy extends PassportStrategy(Strategy) {
@@ -18,7 +19,7 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(_id: string) {
+  async validate(_id: string): Promise<User> {
     const decodedUser = await this.userModel.findById(_id);
 
     if (!decodedUser) {

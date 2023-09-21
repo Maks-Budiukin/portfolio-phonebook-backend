@@ -14,14 +14,15 @@ import { v4 } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from './dto/update-users.dto';
 import { FilesService } from 'src/files/files.service';
-import { MFile } from 'src/files/mfile.class';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { UserResponseDto } from './dto/users.response.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly jwtService: JwtService,
-    private readonly filesService: FilesService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   async findUser(email: string): Promise<User> {
@@ -72,7 +73,7 @@ export class UsersService {
     return loggedUser;
   }
 
-  async logoutUser(user) {
+  async logoutUser(user: UserResponseDto) {
     await this.userModel.findByIdAndUpdate(user._id, { token: null });
 
     return;
@@ -81,8 +82,8 @@ export class UsersService {
   async updateUser(
     dto: UpdateUserDto,
     id: string,
-    user,
-    file: MFile,
+    user: UserResponseDto,
+    file: Express.Multer.File,
   ): Promise<User> {
     if (Object.keys(dto).length === 0 && !file) {
       throw new BadRequestException('At least one field required!');
@@ -95,12 +96,12 @@ export class UsersService {
     }
 
     if (file) {
-      const avatar = await this.filesService.changeContactAvatar(
+      const avatar = await this.cloudinaryService.uploadImage(
         file,
-        user,
-        userToUpdate._id,
+        userToUpdate,
+        userToUpdate._id.toString(),
       );
-      await this.userModel.findByIdAndUpdate(id, { avatar });
+      await this.userModel.findByIdAndUpdate(id, { avatar: avatar.url });
     }
 
     const updatedUser = await this.userModel
@@ -111,7 +112,7 @@ export class UsersService {
     return updatedUser;
   }
 
-  async refreshfUser(user): Promise<User> {
+  async refreshfUser(user: UserResponseDto): Promise<User> {
     const foundUser = await this.userModel
       .findById(user._id)
       .select('-password -updatedAt -createdAt -token');

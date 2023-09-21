@@ -6,12 +6,6 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-// import { Avatar } from 'src/contacts/contacts.model';
-
-class Avatar {
-  X200: string;
-  X500: string;
-}
 
 export class UserDto {
   @IsOptional()
@@ -120,7 +114,7 @@ export class UserDto {
     description: "User's Avatar",
   })
   @IsOptional()
-  avatar?: Avatar;
+  avatar?: string;
 
   @ApiProperty({
     example: 'Password1',

@@ -19,6 +19,8 @@ import { JwtAuthGuard } from './guards/jwt.guard';
 import { User } from './users.model';
 import { UpdateUserDto } from './dto/update-users.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { GetUser } from './getuser.decorator';
+import { UserResponseDto } from './dto/users.response.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -43,7 +45,7 @@ export class UsersController {
     description: 'Logged-in user object',
     type: User,
   })
-  async login(@Body() dto: UserDto) {
+  async login(@Body() dto: UserDto): Promise<User> {
     const user = await this.usersService.validateUser(dto);
     return await this.usersService.loginUser(user);
   }
@@ -56,8 +58,8 @@ export class UsersController {
     status: 204,
     description: 'User logged out',
   })
-  async logout(@Req() request: Request) {
-    return await this.usersService.logoutUser(request.user);
+  async logout(@GetUser() user: UserResponseDto) {
+    return await this.usersService.logoutUser(user);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -72,10 +74,10 @@ export class UsersController {
   async updateUser(
     @Body() dto: UpdateUserDto,
     @Param('id') id: string,
-    @Req() request: Request,
+    @GetUser() user: UserResponseDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return await this.usersService.updateUser(dto, id, request.user, file);
+    return await this.usersService.updateUser(dto, id, user, file);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -86,8 +88,8 @@ export class UsersController {
     type: User,
   })
   @Get('current')
-  async refresh(@Req() request: Request) {
-    return await this.usersService.refreshfUser(request.user);
+  async refresh(@GetUser() user: UserResponseDto) {
+    return await this.usersService.refreshfUser(user);
   }
 
   @ApiOperation({ summary: 'Share user' })
@@ -97,11 +99,7 @@ export class UsersController {
     type: User,
   })
   @Get('share/:shareLink/:id')
-  async share(
-    @Param('id') id: string,
-    @Req() request: Request,
-    @Param('shareLink') shareLink: string,
-  ) {
+  async share(@Param('id') id: string, @Param('shareLink') shareLink: string) {
     return await this.usersService.shareContact(id, shareLink);
   }
 }

@@ -11,6 +11,9 @@ import { ContactDto } from './dto/contacts.dto';
 import { UpdateContactDto } from './dto/update-contacts.dto';
 import { FilesService } from 'src/files/files.service';
 import { MFile } from 'src/files/mfile.class';
+import { UserResponseDto } from 'src/users/dto/users.response.dto';
+import { User } from 'src/users/users.model';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class ContactsService {
@@ -18,6 +21,7 @@ export class ContactsService {
     @InjectModel(Contact.name)
     private readonly contactModel: Model<ContactDocument>,
     private readonly filesService: FilesService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   async getContacts(user): Promise<Contact[]> {
@@ -61,8 +65,8 @@ export class ContactsService {
   async updateContact(
     dto: UpdateContactDto,
     id: string,
-    user,
-    file: MFile,
+    user: User,
+    file: Express.Multer.File,
   ): Promise<Contact> {
     if (Object.keys(dto).length === 0 && !file) {
       throw new BadRequestException('At least one field required!');
@@ -77,13 +81,22 @@ export class ContactsService {
       throw new NotFoundException('No such contact!');
     }
 
+    // if (file) {
+    //   const avatar = await this.filesService.changeContactAvatar(
+    //     file,
+    //     user,
+    //     id,
+    //   );
+    //   await this.contactModel.findByIdAndUpdate(id, { avatar });
+    // }
+
     if (file) {
-      const avatar = await this.filesService.changeContactAvatar(
+      const avatar = await this.cloudinaryService.uploadImage(
         file,
         user,
-        id,
+        contactToUpdate._id,
       );
-      await this.contactModel.findByIdAndUpdate(id, { avatar });
+      await this.contactModel.findByIdAndUpdate(id, { avatar: avatar.url });
     }
 
     const updatedContact = await this.contactModel
