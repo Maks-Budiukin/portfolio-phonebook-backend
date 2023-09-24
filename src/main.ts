@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { urlencoded, json } from 'express';
 
 //Swagger config
 const config = new DocumentBuilder()
@@ -36,6 +37,8 @@ async function bootstrap() {
     ],
   });
   app.enableCors();
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
   await app.listen(4000);
   if (module.hot) {
     module.hot.accept();
