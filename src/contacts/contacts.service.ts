@@ -91,7 +91,7 @@ export class ContactsService {
         user,
         contactToUpdate._id.toString(),
       );
-      dto.avatar = 'avatar.url';
+      dto.avatar = avatar.url;
     }
 
     const updatedContact = await this.contactModel
