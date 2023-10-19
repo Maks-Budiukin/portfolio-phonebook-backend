@@ -8,13 +8,13 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UserCreateDto {
-  @ApiPropertyOptional({
-    example: 'Bob Marley',
-    description: 'Username',
-  })
-  @IsString()
-  @IsOptional()
-  name?: string;
+  // @ApiPropertyOptional({
+  //   example: 'Bob Marley',
+  //   description: 'Username',
+  // })
+  // @IsString()
+  // @IsOptional()
+  // name?: string;
 
   @ApiProperty({
     example: 'bobmarley@gmail.com',
@@ -22,7 +22,7 @@ export class UserCreateDto {
   })
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  authEmail: string;
 
   @ApiProperty({
     example: 'Password1',

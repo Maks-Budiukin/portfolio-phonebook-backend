@@ -20,6 +20,13 @@ export class UserResponseDto {
   })
   @IsEmail()
   @IsString()
+  authEmail: string;
+
+  @ApiResponseProperty({
+    example: 'bobmarley@gmail.com',
+  })
+  @IsEmail()
+  @IsString()
   email: string;
 
   @ApiResponseProperty({

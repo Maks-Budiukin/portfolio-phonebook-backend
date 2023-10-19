@@ -25,13 +25,13 @@ export class UsersService {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  async findUser(email: string): Promise<User> {
-    const user = await this.userModel.findOne({ email });
+  async findUser(authEmail: string): Promise<User> {
+    const user = await this.userModel.findOne({ authEmail });
     return user;
   }
 
   async validateUser(dto: UserCreateDto): Promise<User> {
-    const user = await this.findUser(dto.email);
+    const user = await this.findUser(dto.authEmail);
 
     if (!user) {
       throw new UnauthorizedException('Email or password is wrong!');
@@ -45,7 +45,7 @@ export class UsersService {
   }
 
   async createUser(dto: UserCreateDto): Promise<void> {
-    const user = await this.findUser(dto.email);
+    const user = await this.findUser(dto.authEmail);
 
     if (user) {
       throw new ConflictException('User with this email already exists!');

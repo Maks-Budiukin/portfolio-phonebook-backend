@@ -11,6 +11,9 @@ export class User {
   name: string;
 
   @Prop({ unique: true })
+  authEmail: string;
+
+  @Prop({ default: null })
   email: string;
 
   @Prop({ default: null })
