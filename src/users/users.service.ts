@@ -133,7 +133,7 @@ export class UsersService {
   async shareContact(id: string, shareLink: string): Promise<UserResponseDto> {
     const sharedUser = await this.userModel
       .findById(id)
-      .select('-password -updatedAt -createdAt -token -_id');
+      .select('-password -updatedAt -createdAt -token -_id -authEmail');
     if (!sharedUser || sharedUser.shareLink !== shareLink) {
       throw new NotFoundException('No user to add!');
     }
