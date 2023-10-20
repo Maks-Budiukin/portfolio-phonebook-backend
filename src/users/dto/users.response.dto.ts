@@ -59,11 +59,11 @@ export class UserResponseDto {
   @IsString()
   github: string;
 
-  @ApiResponseProperty({
-    example: 'https://www.facebook.com/mr.hetfield/',
-  })
-  @IsString()
-  facebook: string;
+  // @ApiResponseProperty({
+  //   example: 'https://www.facebook.com/mr.hetfield/',
+  // })
+  // @IsString()
+  // facebook: string;
 
   @ApiResponseProperty({
     example: 'https://twitter.com/therealhetfield',

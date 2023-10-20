@@ -56,13 +56,13 @@ export class ContactCreateDto {
   @IsOptional()
   github?: string;
 
-  @ApiPropertyOptional({
-    example: 'https://www.facebook.com/mr.hetfield/',
-    description: "Contact's Facebook",
-  })
-  @IsString()
-  @IsOptional()
-  facebook?: string;
+  // @ApiPropertyOptional({
+  //   example: 'https://www.facebook.com/mr.hetfield/',
+  //   description: "Contact's Facebook",
+  // })
+  // @IsString()
+  // @IsOptional()
+  // facebook?: string;
 
   @ApiPropertyOptional({
     example: 'https://twitter.com/therealhetfield',

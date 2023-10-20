@@ -58,13 +58,13 @@ export class UpdateUserDto {
   @IsString()
   github?: string;
 
-  @ApiPropertyOptional({
-    example: 'https://www.facebook.com/mr.hetfield/',
-    description: "User's Facebook",
-  })
-  @IsOptional()
-  @IsString()
-  facebook?: string;
+  // @ApiPropertyOptional({
+  //   example: 'https://www.facebook.com/mr.hetfield/',
+  //   description: "User's Facebook",
+  // })
+  // @IsOptional()
+  // @IsString()
+  // facebook?: string;
 
   @ApiPropertyOptional({
     example: 'https://twitter.com/therealhetfield',

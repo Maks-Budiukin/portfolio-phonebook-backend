@@ -31,8 +31,8 @@ export class User {
   @Prop({ default: null })
   github: string;
 
-  @Prop({ default: null })
-  facebook: string;
+  // @Prop({ default: null })
+  // facebook: string;
 
   @Prop({ default: null })
   twitter: string;
